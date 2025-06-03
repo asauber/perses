@@ -28,6 +28,9 @@ COVER_PROFILE         := coverage.txt
 PKG_LDFLAGS           := github.com/prometheus/common/version
 LDFLAGS               := -s -w -X ${PKG_LDFLAGS}.Version=${VERSION} -X ${PKG_LDFLAGS}.Revision=${COMMIT} -X ${PKG_LDFLAGS}.BuildDate=${DATE} -X ${PKG_LDFLAGS}.Branch=${BRANCH}
 GORELEASER_PARALLEL   ?= 0
+REGISTRY_DEV          ?= localhost:5000
+REPO_DEV              ?= persesdev
+VERSION_DEV           ?= $(shell git describe --tags)
 
 export LDFLAGS
 export DATE
@@ -213,3 +216,11 @@ update-helm-readme:
 install-default-plugins:
 	@echo ">> install default plugins"
 	$(GO) run ./scripts/plugin/install_plugin.go
+
+.PHONY: container-dev
+container-dev: generate
+	docker build -f Dockerfile.dev . -t ${REGISTRY_DEV}/${REPO_DEV}:${VERSION_DEV}
+
+.PHONY: push-dev
+push-container-dev:
+	docker push ${REGISTRY_DEV}/${REPO_DEV}:${VERSION_DEV}
