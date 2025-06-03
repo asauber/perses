@@ -62,6 +62,7 @@ func New(conf config.Config, enablePprof bool, registry *prometheus.Registry, ba
 
 	if len(conf.Provisioning.Folders) > 0 {
 		provisioningTask := provisioning.New(serviceManager, conf.Provisioning.Folders, persesDAO.IsCaseSensitive())
+		logrus.WithFields(logrus.Fields{"interval": conf.Provisioning.Interval}).Debug("Provisioning task started with interval")
 		runner.WithTimerTasks(time.Duration(conf.Provisioning.Interval), provisioningTask)
 	}
 	if len(conf.Datasource.Global.Discovery) > 0 {
