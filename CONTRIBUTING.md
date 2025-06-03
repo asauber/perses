@@ -131,3 +131,18 @@ The API backend is now available on port 8080 :). You can log in with user: `adm
 ### Web App
 
 See the [ui/README.md](./ui/README.md) file for details around the build process and the structure of the web UI.
+
+### Development Container Image
+
+A Dockerfile can be found at the root of the repo which can build a container
+for development purposes which includes both the API and UI.
+
+If you have a remote Docker repository named myregistry.io/myname/myrepo and an
+intended temporary tag version of v0.0.151, then you can build and push the
+image as follows using the Makefile.
+
+```
+export PERSES_IMAGE_TAG_DEV="myregistry.io/myname/myrepo:v0.0.151"
+make container-dev
+make push-container-dev
+```

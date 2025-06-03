@@ -213,3 +213,15 @@ update-helm-readme:
 install-default-plugins:
 	@echo ">> install default plugins"
 	$(GO) run ./scripts/plugin/install_plugin.go
+
+.PHONY: check-dev-env
+check-dev-env:
+	@test -n "${PERSES_IMAGE_TAG_DEV}" || (echo "Error: \$$PERSES_IMAGE_TAG_DEV is unset"; exit 1)
+
+.PHONY: container-dev
+container-dev: check-dev-env generate
+	docker build -f Dockerfile.dev -t ${PERSES_IMAGE_TAG_DEV} .
+
+.PHONY: push-dev
+push-container-dev: check-dev-env
+	docker push ${PERSES_IMAGE_TAG_DEV}
